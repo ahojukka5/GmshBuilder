@@ -18,7 +18,7 @@ cd $WORKSPACE/srcdir
 cd gmsh-4.1.5-source
 mkdir build
 cd build
-cmake -DCMAKE_INSTALL_PREFIX=$prefix -DENABLE_BUILD_SHARED=1 -DCMAKE_TOOLCHAIN_FILE=/opt/$target/$target.toolchain ..
+cmake -DCMAKE_INSTALL_PREFIX=$prefix -DDEFAULT=0 -DENABLE_BUILD_SHARED=1 -DENABLE_MESH=1 -DCMAKE_TOOLCHAIN_FILE=/opt/$target/$target.toolchain ..
 make
 make install
 exit
@@ -28,7 +28,8 @@ exit
 # These are the platforms we will build for by default, unless further
 # platforms are passed in on the command line
 platforms = [
-    Linux(:x86_64, libc=:glibc)
+    Linux(:x86_64, libc=:glibc),
+    MacOS(:x86_64),
 ]
 
 # The products that we will ensure are always built
