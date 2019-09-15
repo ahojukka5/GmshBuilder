@@ -1,20 +1,27 @@
 language: julia
+
 os:
-  - linux
+    - linux
+
 julia:
-  - 1.0
+    - 1.2
+
 notifications:
-  email: false
+    email: false
+
 git:
-  depth: 99999999
+    depth: 99999999
+
 cache:
-  timeout: 1000
-  directories:
-    - downloads
+    timeout: 1000
+    directories:
+        - downloads
+
 env:
-  global:
-    - BINARYBUILDER_DOWNLOADS_CACHE=downloads
-    - BINARYBUILDER_AUTOMATIC_APPLE=false
+    global:
+        - BINARYBUILDER_DOWNLOADS_CACHE=downloads
+        - BINARYBUILDER_AUTOMATIC_APPLE=true
+
 sudo: required
 
 # Before anything else, get the latest versions of things
@@ -24,3 +31,13 @@ before_script:
 script:
   - julia build_tarballs.jl
 
+deploy:
+    provider: releases
+    api_key:
+        secure: biXijp4v5F7DNPBwYdCjtSCG9+aKlgLfMgh9JtDtm3nAdOFO/8LSR0r3gzoglJriQzMpS9DPHuxnMWXYbV6u3KzLlvjJgYkBDUOW0y0LimxG9/WSeEeOvIaPjFiIT9tCghjuNWDD5YC0vtR55cfPDQP45DajtiKeASw2qzIjDMsdWZUXee98B6IXAD2PSZ8BiPRx76uJFdnWvqVNHDVJ5twkOppBaT1XeZt1WgWZP9oLupDqr/wgVm0qflMXMLGtxfQkN/JG2BA7O75rHxEGsz0io9JFxaSd85HHBPFmABXSpgUBDXIxhTDADz7g/IwTiMfnI1hDe7W0YqdUEbf5hnGqmdCbJ0z6e2+z411Q7ZCYxl3qw/v37LCkjKaPCTA2Rz6W/jMzLEaj9L/c5XCA6PW22YqXVmBLfYfeo+pYKscdV31GdN1Ugv6B2hJcs9zcBHiJk6Np41nyg18iLpI9Q6Elrz6V59lEMC0LxImp0yWFn4O9bMnR9Akba0nvqYrVchvDzCp1WTIs0KHeVKu9Lk4e+3tqeAV8s0a8Smvrjpdk9ZF+/0A8vuF6H0y3aH9oIBk800wdlNjNMofIMEIdJ1RB/LQ+OU+Op54X029xVqynuQDu2xylzrYLhVh4VmBi3kmrg3eSGjITOHjxMDUdQB0j9cqmNRieevAImzkE3lE=
+    file_glob: true
+    file: products/*.tar.gz
+    skip_cleanup: true
+    on:
+      repo: ahojukka5/GmshBuilder
+      tags: true
