@@ -3,38 +3,32 @@
 using BinaryBuilder
 
 name = "gmsh"
-version = v"4.4.1"
+version = v"4.7.1"
 
 # Collection of sources required to build Gmsh
 sources = [
-    "http://gmsh.info/src/gmsh-$version-source.tgz" =>
-    "853c6438fc4e4b765206e66a514b09182c56377bb4b73f1d0d26eda7eb8af0dc",
-
+    GitSource("https://gitlab.onelab.info/gmsh/gmsh.git", "8417af5701df5fb2d4e208424f1477be21f65c3c"),
 ]
 
 # Bash recipe for building across all platforms
 script = raw"""
-cd $WORKSPACE/srcdir
-cd gmsh-*
+cd ${WORKSPACE}/srcdir/gmsh
+install_license LICENSE.txt
 mkdir build
 cd build
-cmake -DCMAKE_INSTALL_PREFIX=$prefix -DDEFAULT=0 -DENABLE_BUILD_SHARED=1 -DENABLE_MESH=1 -DCMAKE_TOOLCHAIN_FILE=/opt/$target/$target.toolchain ..
+cmake -DCMAKE_INSTALL_PREFIX=${prefix} -DCMAKE_TOOLCHAIN_FILE=${CMAKE_TARGET_TOOLCHAIN} -DCMAKE_BUILD_TYPE=Release -DENABLE_BUILD_DYNAMIC=1 ..
 make
 make install
 exit
-
 """
 
 # These are the platforms we will build for by default, unless further
 # platforms are passed in on the command line
-platforms = [
-    Linux(:x86_64, libc=:glibc),
-    MacOS(:x86_64),
-]
+platforms = supported_platforms()
 
 # The products that we will ensure are always built
-products(prefix) = [
-    LibraryProduct(prefix, "libgmsh", :libgmsh),
+products = [
+    LibraryProduct(["libgmsh", "gmsh"], :libgmsh),
 #   ExecutableProduct(prefix, "gmsh", :gmsh)
 ]
 
